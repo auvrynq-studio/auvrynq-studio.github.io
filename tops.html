@@ -79,9 +79,68 @@ footer {
     上身服飾<br>
     A CURATED SELECTION OF ESSENTIALS.
   </p>
-  <div class="coming">
-    COMING SOON
+  
+    
+
+<div class="product-grid">
+  <div class="product-card">
+    <div class="product-image">
+      IMAGE COMING SOON
+    </div>
+    <div class="product-info">
+      <p>NEW COLLECTION</p>
+      <h3>COMING SOON</h3>
+      <span>PRICE TBA</span>
+    </div>
   </div>
+</div>
+
+<style>
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  text-align: left;
+}
+
+.product-card {
+  min-width: 0;
+}
+
+.product-image {
+  aspect-ratio: 3 / 4;
+  background: #1b1b1b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.product-info {
+  padding: 16px 0;
+}
+
+.product-info p {
+  color: #888;
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+.product-info h3 {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.product-info span {
+  color: #aaa;
+  font-size: 12px;
+}
+</style>
+
   <a class="back" href="index.html">
     BACK TO HOME
   </a>
