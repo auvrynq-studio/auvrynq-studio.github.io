@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout | AUVRYNQ</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #111;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+header {
+  text-align: center;
+  padding: 30px 15px;
+  font-size: 24px;
+  letter-spacing: 6px;
+  border-bottom: 1px solid #333;
+}
+main {
+  max-width: 650px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+h1 { font-size: 21px; letter-spacing: 3px; }
+h2 {
+  margin-top: 35px;
+  font-size: 15px;
+  letter-spacing: 2px;
+}
+label {
+  display: block;
+  margin: 18px 0 8px;
+  font-size: 13px;
+}
+input, select {
+  width: 100%;
+  padding: 14px;
+  background: #1c1c1c;
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 0;
+  font-size: 14px;
+}
+.summary {
+  border-top: 1px solid #444;
+  border-bottom: 1px solid #444;
+  padding: 20px 0;
+  line-height: 2;
+}
+.total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  margin-top: 20px;
+}
+.note {
+  color: #aaa;
+  font-size: 12px;
+  line-height: 1.8;
+}
+button {
+  width: 100%;
+  padding: 17px;
+  margin-top: 30px;
+  background: #fff;
+  color: #111;
+  border: 0;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.back {
+  display: block;
+  margin: 25px 0;
+  color: #aaa;
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+
+<header>AUVRYNQ</header>
+
+<main>
+<h1>CHECKOUT</h1>
+
+<h2>ORDER SUMMARY / 訂單摘要</h2>
+<div class="summary">
+  <div id="order-items"></div>
+  <div class="total">
+    <span>商品小計</span>
+    <span id="subtotal">NT$0</span>
+  </div>
+  <p class="note">運費尚未計入，待確認配送費用後更新。</p>
+</div>
+
+<h2>SHIPPING / 配送方式</h2>
+<label for="shipping">選擇配送方式</label>
+<select id="shipping" onchange="updateShipping()">
+  <option value="711">7-ELEVEN 超商取貨</option>
+  <option value="family">全家超商取貨</option>
+  <option value="home">宅配到府</option>
+</select>
+
+<div id="store-fields">
+  <label for="store">取貨門市名稱及地址</label>
+  <input id="store" placeholder="例如：XX門市，完整地址">
+</div>
+
+<div id="home-fields" style="display:none;">
+  <label for="address">宅配地址</label>
+  <input id="address" placeholder="縣市、區域、路段、門牌">
+</div>
+
+<h2>CONTACT / 收件資料</h2>
+<label for="customer">收件人姓名</label>
+<input id="customer" autocomplete="name" placeholder="請輸入姓名">
+
+<label for="phone">手機號碼</label>
+<input id="phone" type="tel" autocomplete="tel" placeholder="09XXXXXXXX">
+
+<label for="email">電子郵件</label>
+<input id="email" type="email" autocomplete="email" placeholder="example@email.com">
+
+<h2>PAYMENT / 付款方式</h2>
+<p>銀行轉帳 BANK TRANSFER</p>
+<p class="note">
+  正式接單功能尚未開放。
+  後續將提供銀行資訊及安全的訂單提交方式。
+</p>
+
+<button type="button" disabled>
+  PLACE ORDER / 尚未開放下單
+</button>
+
+<a class="back" href="cart.html">
+  BACK TO CART
+</a>
+</main>
+
+<script>
+function updateShipping() {
+  const shipping = document.getElementById("shipping").value;
+  document.getElementById("store-fields").style.display =
+    shipping === "home" ? "none" : "block";
+  document.getElementById("home-fields").style.display =
+    shipping === "home" ? "block" : "none";
+}
+
+function loadOrder() {
+  let cart = [];
+  try {
+    const data = JSON.parse(
+      localStorage.getItem("auvrynq_cart") || "[]"
+    );
+    if (Array.isArray(data)) cart = data;
+  } catch {}
+
+  const items = document.getElementById("order-items");
+  let total = 0;
+
+  if (cart.length === 0) {
+    items.textContent = "購物車目前沒有商品";
+  }
+
+  cart.forEach(item => {
+    const price = Number(item.price) || 0;
+    const qty = Number(item.quantity) || 0;
+    total += price * qty;
+
+    const line = document.createElement("div");
+    line.textContent =
+      item.id + " / SIZE " + item.size +
+      " / QTY " + qty +
+      " / NT$" + (price * qty).toLocaleString("en-US");
+    items.appendChild(line);
+  });
+
+  document.getElementById("subtotal").textContent =
+    "NT$" + total.toLocaleString("en-US");
+}
+
+loadOrder();
+</script>
+</body>
+</html>
