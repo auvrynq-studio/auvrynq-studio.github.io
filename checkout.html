@@ -186,13 +186,61 @@ button {
 </main>
 
 <script>
+
 function updateShipping() {
   const shipping = document.getElementById("shipping").value;
+  const county = document.getElementById("county").value;
+
   document.getElementById("store-fields").style.display =
     shipping === "home" ? "none" : "block";
+
   document.getElementById("home-fields").style.display =
     shipping === "home" ? "block" : "none";
+
+  const feeDisplay = document.getElementById("shipping-fee");
+  const totalDisplay = document.getElementById("grand-total");
+  const note = document.getElementById("shipping-note");
+
+  feeDisplay.textContent = "待確認";
+  totalDisplay.textContent = "待確認";
+
+  if (!county) {
+    note.textContent = "請先選擇收件縣市。";
+    return;
+  }
+
+  const islands = ["澎湖縣", "金門縣", "連江縣"];
+
+  if (islands.includes(county)) {
+    note.textContent = "離島運費與配送範圍需人工確認。";
+    return;
+  }
+
+  const shippingFees = {
+    "711": 60,
+    "family": 60,
+    "home": 89
+  };
+
+  const fee = shippingFees[shipping];
+  const subtotal = Number(
+    document.getElementById("subtotal")
+      .textContent.replace(/[^0-9]/g, "")
+  ) || 0;
+
+  if (subtotal <= 0 || fee === undefined) {
+    note.textContent = "請先確認購物車商品與配送方式。";
+    return;
+  }
+
+  feeDisplay.textContent = "NT$" + fee;
+  totalDisplay.textContent =
+    "NT$" + (subtotal + fee).toLocaleString("en-US");
+
+  note.textContent =
+    "目前為測試運費，正式出貨前須確認物流費率、包裹規格與配送限制。";
 }
+
 
 function loadOrder() {
   let cart = [];
