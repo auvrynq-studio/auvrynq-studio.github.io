@@ -154,10 +154,25 @@ button {
   <input id="store" placeholder="例如：XX門市，完整地址">
 </div>
 
+
 <div id="home-fields" style="display:none;">
-  <label for="address">宅配地址</label>
-  <input id="address" placeholder="縣市、區域、路段、門牌">
+
+  <label for="district">DISTRICT / 鄉鎮市區</label>
+  <input
+    id="district"
+    placeholder="例如：竹東鎮、東區、板橋區"
+    autocomplete="address-level2"
+  >
+
+  <label for="address">ADDRESS / 詳細地址</label>
+  <input
+    id="address"
+    placeholder="路、街、巷、弄、號、樓層"
+    autocomplete="street-address"
+  >
+
 </div>
+
 
 <h2>CONTACT / 收件資料</h2>
 <label for="customer">收件人姓名</label>
