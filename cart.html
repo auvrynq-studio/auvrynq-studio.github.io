@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shopping Cart | AUVRYNQ</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #111;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+header {
+  padding: 30px 20px;
+  text-align: center;
+  font-size: 24px;
+  letter-spacing: 6px;
+  border-bottom: 1px solid #333;
+}
+main {
+  max-width: 650px;
+  margin: 45px auto;
+  padding: 0 20px;
+}
+h1 { font-size: 20px; letter-spacing: 3px; }
+.item {
+  display: flex;
+  gap: 20px;
+  padding: 25px 0;
+  border-bottom: 1px solid #444;
+}
+.item img {
+  width: 110px;
+  height: 140px;
+  object-fit: cover;
+}
+.details { flex: 1; }
+.details p { color: #aaa; font-size: 13px; }
+button {
+  background: none;
+  color: #aaa;
+  border: 1px solid #555;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.total {
+  display: flex;
+  justify-content: space-between;
+  margin: 30px 0;
+  font-size: 18px;
+}
+.checkout {
+  display: block;
+  width: 100%;
+  padding: 18px;
+  text-align: center;
+  background: #fff;
+  color: #111;
+  text-decoration: none;
+  letter-spacing: 2px;
+}
+.back {
+  display: block;
+  margin-top: 30px;
+  color: #aaa;
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+
+<header>AUVRYNQ</header>
+
+<main>
+<h1>SHOPPING CART</h1>
+<div id="cart-items"></div>
+<div class="total">
+  <span>SUBTOTAL</span>
+  <span id="subtotal">NT$0</span>
+</div>
+<a class="checkout" href="#" onclick="return false;">
+  CHECKOUT / 結帳功能建置中
+</a>
+<a class="back" href="outerwear.html">
+  CONTINUE SHOPPING
+</a>
+</main>
+
+<script>
+function getCart() {
+  try {
+    const data = JSON.parse(
+      localStorage.getItem("auvrynq_cart") || "[]"
+    );
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
+}
+
+function renderCart() {
+  const cart = getCart();
+  const container = document.getElementById("cart-items");
+  container.innerHTML = "";
+
+  let total = 0;
+
+  if (cart.length === 0) {
+    container.textContent = "YOUR CART IS EMPTY / 購物車目前沒有商品";
+  }
+
+  cart.forEach((item, index) => {
+    const quantity = Number(item.quantity) || 0;
+    const price = Number(item.price) || 0;
+    total += price * quantity;
+
+    const row = document.createElement("div");
+    row.className = "item";
+
+    const img = document.createElement("img");
+    img.src = "images/IMG_1915.webp";
+    img.alt = "AV-001";
+
+    const details = document.createElement("div");
+    details.className = "details";
+
+    const name = document.createElement("strong");
+    name.textContent = item.id + " | " + item.name;
+
+    const size = document.createElement("p");
+    size.textContent = "SIZE: " + item.size;
+
+    const qty = document.createElement("p");
+    qty.textContent = "QTY: " + quantity;
+
+    const amount = document.createElement("p");
+    amount.textContent = "NT$" +
+      (price * quantity).toLocaleString("en-US");
+
+    const remove = document.createElement("button");
+    remove.textContent = "REMOVE";
+    remove.onclick = function() {
+      cart.splice(index, 1);
+      localStorage.setItem(
+        "auvrynq_cart", JSON.stringify(cart)
+      );
+      renderCart();
+    };
+
+    details.append(name, size, qty, amount, remove);
+    row.append(img, details);
+    container.appendChild(row);
+  });
+
+  document.getElementById("subtotal").textContent =
+    "NT$" + total.toLocaleString("en-US");
+}
+
+renderCart();
+</script>
+</body>
+</html>
