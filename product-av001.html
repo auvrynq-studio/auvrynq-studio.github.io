@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AV-001 | AUVRYNQ</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #111;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+header {
+  padding: 35px 20px;
+  text-align: center;
+  font-size: 24px;
+  letter-spacing: 6px;
+  border-bottom: 1px solid #333;
+}
+main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 50px 20px;
+}
+.product {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 45px;
+}
+.main-photo {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  background: #222;
+}
+.thumbnails {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+.thumbnails img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  cursor: pointer;
+  opacity: .65;
+}
+.thumbnails img.active {
+  opacity: 1;
+  outline: 1px solid white;
+}
+.label {
+  color: #999;
+  font-size: 12px;
+  letter-spacing: 4px;
+}
+h1 {
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  line-height: 1.5;
+}
+.price {
+  font-size: 22px;
+  margin: 25px 0;
+}
+.description {
+  color: #aaa;
+  line-height: 2;
+}
+.back {
+  display: inline-block;
+  margin-top: 40px;
+  padding: 15px 25px;
+  border: 1px solid #777;
+  color: white;
+  text-decoration: none;
+  letter-spacing: 2px;
+}
+footer {
+  text-align: center;
+  color: #777;
+  padding: 60px 20px;
+}
+@media (max-width: 700px) {
+  .product {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>AUVRYNQ</header>
+
+<main>
+  <div class="product">
+    <div>
+      <img id="mainPhoto" class="main-photo"
+           src="images/IMG_1915.webp"
+           alt="AV-001 黑色皮外套">
+
+      <div class="thumbnails">
+        <img class="active" src="images/IMG_1915.webp" alt="照片1" onclick="changePhoto(this)">
+        <img src="images/IMG_1916.jpeg" alt="照片2" onclick="changePhoto(this)">
+        <img src="images/IMG_1918.jpeg" alt="照片3" onclick="changePhoto(this)">
+        <img src="images/IMG_1920.jpeg" alt="照片4" onclick="changePhoto(this)">
+      </div>
+    </div>
+
+    <div>
+      <p class="label">AUVRYNQ / OUTERWEAR</p>
+      <h1>AV-001 | BLACK LEATHER JACKET</h1>
+      <p class="price">NT$1,490</p>
+      <p class="description">
+        黑色皮革風格外套<br>
+        四張實拍照片展示<br>
+        尺寸及商品細節持續更新中
+      </p>
+      <a class="back" href="outerwear.html">BACK TO OUTERWEAR</a>
+    </div>
+  </div>
+</main>
+
+<footer>AUVRYNQ © 2026</footer>
+
+<script>
+function changePhoto(image) {
+  document.getElementById("mainPhoto").src = image.src;
+  document.querySelectorAll(".thumbnails img").forEach(function(img) {
+    img.classList.remove("active");
+  });
+  image.classList.add("active");
+}
+</script>
+
+</body>
+</html>
