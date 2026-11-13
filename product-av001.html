@@ -157,6 +157,37 @@ footer {
 <footer>AUVRYNQ © 2026</footer>
 
 <script>
+  
+function addToCart() {
+  const size = document.getElementById("product-size").value;
+
+  if (!size) {
+    alert("請先選擇尺寸 / PLEASE SELECT A SIZE");
+    return;
+  }
+
+  const cart = JSON.parse(localStorage.getItem("auvrynq_cart") || "[]");
+
+  const existing = cart.find(
+    item => item.id === "AV-001" && item.size === size
+  );
+
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({
+      id: "AV-001",
+      name: "BLACK LEATHER JACKET",
+      size: size,
+      price: 1490,
+      quantity: 1
+    });
+  }
+
+  localStorage.setItem("auvrynq_cart", JSON.stringify(cart));
+  alert("ADDED TO CART / 已加入購物車");
+}
+
 function changePhoto(image) {
   document.getElementById("mainPhoto").src = image.src;
   document.querySelectorAll(".thumbnails img").forEach(function(img) {
