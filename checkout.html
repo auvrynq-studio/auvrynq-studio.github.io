@@ -495,7 +495,41 @@ async function placeOrder() {
     return;
   }
 
-  alert("基本資料驗證成功，下一步設定 LINE 訂單通知");
+ const order = {
+  name,
+  phone,
+  email,
+  product: cart.map(item =>
+    `${item.id} / SIZE ${item.size} / QTY ${item.quantity}`
+  ).join(", "),
+  total: cart.reduce((sum, item) =>
+    sum + Number(item.price) * Number(item.quantity), 0
+  ),
+  shipping: document.getElementById("shipping").value,
+  address: document.getElementById("address")?.value || ""
+};
+
+try {
+  const response = await fetch(
+    "https://auvrynq-line-notify.pp0906865901.workers.dev",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(order)
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("LINE 通知失敗");
+  }
+
+  alert("訂單通知已送出，請等待店家確認");
+} catch (error) {
+  alert("訂單送出失敗，請稍後再試");
+}
+
 }
 
 loadOrder();
