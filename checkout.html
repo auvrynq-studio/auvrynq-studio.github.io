@@ -191,8 +191,8 @@ button {
   後續將提供銀行資訊及安全的訂單提交方式。
 </p>
 
-<button type="button" disabled>
-  PLACE ORDER / 尚未開放下單
+<button type="button" onclick="placeOrder()">
+  PLACE ORDER / 確認送出訂單
 </button>
 
 <a class="back" href="cart.html">
@@ -476,6 +476,26 @@ function loadOrder() {
 
   document.getElementById("subtotal").textContent =
     "NT$" + total.toLocaleString("en-US");
+}
+
+async function placeOrder() {
+  const name = document.getElementById("customer").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const email = document.getElementById("email").value.trim();
+
+  if (!name || !phone || !email) {
+    alert("請填寫收件人姓名、電話及電子郵件");
+    return;
+  }
+
+  const cart = JSON.parse(localStorage.getItem("auvrynq_cart") || "[]");
+
+  if (!cart.length) {
+    alert("購物車是空的，請先選購商品");
+    return;
+  }
+
+  alert("基本資料驗證成功，下一步設定 LINE 訂單通知");
 }
 
 loadOrder();
