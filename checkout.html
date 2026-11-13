@@ -408,16 +408,22 @@ function updateShipping() {
 
   const islands = ["澎湖縣", "金門縣", "連江縣"];
 
-  if (islands.includes(county)) {
-    note.textContent = "離島運費與配送範圍需人工確認。";
-    return;
-  }
+  const isIsland = islands.includes(county);
 
-  const shippingFees = {
-    "711": 60,
-    "family": 60,
-    "home": 89
-  };
+
+  
+const shippingFees = isIsland
+  ? {
+      "711": 100,
+      "family": 100,
+      "home": 200
+    }
+  : {
+      "711": 60,
+      "family": 60,
+      "home": 89
+    };
+
 
   const fee = shippingFees[shipping];
   const subtotal = Number(
