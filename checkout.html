@@ -205,6 +205,33 @@ button {
 function updateShipping() {
   const shipping = document.getElementById("shipping").value;
   const county = document.getElementById("county").value;
+  
+  const districtSelect = document.getElementById("district");
+
+  const districts = {
+    "新竹縣": [
+      "竹東鎮", "竹北市", "湖口鄉", "新豐鄉",
+      "新埔鎮", "關西鎮", "芎林鄉", "橫山鄉",
+      "北埔鄉", "寶山鄉", "峨眉鄉",
+      "尖石鄉", "五峰鄉"
+    ]
+  };
+
+  const previousDistrict = districtSelect.value;
+  districtSelect.innerHTML =
+    '<option value="">請選擇鄉鎮市區</option>';
+
+  (districts[county] || []).forEach(district => {
+    const option = document.createElement("option");
+    option.value = district;
+    option.textContent = district;
+    districtSelect.appendChild(option);
+  });
+
+  if (districts[county]?.includes(previousDistrict)) {
+    districtSelect.value = previousDistrict;
+  }
+
 
   document.getElementById("store-fields").style.display =
     shipping === "home" ? "none" : "block";
@@ -291,6 +318,7 @@ function loadOrder() {
 }
 
 loadOrder();
+updateShipping();
 </script>
 </body>
 </html>
