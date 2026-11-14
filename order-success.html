@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order Received | AUVRYNQ</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #080808;
+      color: #f5f5f5;
+      font-family: Arial, "Noto Sans TC", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 22px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      text-align: center;
+    }
+
+    .brand {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: 8px;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      color: #888;
+      font-size: 11px;
+      letter-spacing: 4px;
+    }
+
+    .divider {
+      height: 1px;
+      background: #333;
+      margin: 48px 0;
+    }
+
+    .check {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 30px;
+      border: 1px solid #b7b49c;
+      border-radius: 50%;
+      color: #b7b49c;
+      font-size: 35px;
+      line-height: 66px;
+    }
+
+    h1 {
+      font-size: 23px;
+      letter-spacing: 3px;
+      margin-bottom: 14px;
+    }
+
+    .description {
+      color: #aaa;
+      font-size: 14px;
+      line-height: 2;
+    }
+
+    .order-box {
+      border: 1px solid #383838;
+      background: #141414;
+      padding: 25px 16px;
+      margin: 38px 0;
+    }
+
+    .order-label {
+      color: #888;
+      font-size: 12px;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .order-number {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      overflow-wrap: anywhere;
+    }
+
+    .notice {
+      font-size: 13px;
+      color: #999;
+      line-height: 2;
+      margin-bottom: 36px;
+    }
+
+    .button {
+      display: block;
+      padding: 20px;
+      background: #b7b49c;
+      color: #080808;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 3px;
+    }
+
+    footer {
+      margin-top: 65px;
+      color: #666;
+      font-size: 10px;
+      letter-spacing: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container">
+    <div class="brand">AUVRYNQ</div>
+    <div class="subtitle">ORDER CONFIRMATION</div>
+
+    <div class="divider"></div>
+
+    <div class="check">✓</div>
+
+    <h1>ORDER RECEIVED</h1>
+
+    <p class="description">
+      您的訂單已成功送出<br>
+      感謝您選擇 AUVRYNQ
+    </p>
+
+    <div class="order-box">
+      <div class="order-label">ORDER NUMBER / 訂單編號</div>
+      <div class="order-number" id="orderNumber">
+        載入中...
+      </div>
+    </div>
+
+    <p class="notice">
+      訂單目前等待店家確認。<br>
+      確認後將提供付款資訊及後續說明。<br>
+      請勿在收到付款通知前自行匯款。
+    </p>
+
+    <a class="button" href="index.html">
+      RETURN TO STORE / 返回商店
+    </a>
+
+    <footer>AUVRYNQ © 2026</footer>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const orderNumber = params.get("orderNumber");
+
+    document.getElementById("orderNumber").textContent =
+      orderNumber || "尚未提供訂單編號";
+  </script>
+
+</body>
+</html>
