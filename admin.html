@@ -1,0 +1,615 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>AUVRYNQ | Order Management</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080808;
+      --panel: #121212;
+      --line: #303030;
+      --text: #f1f1ed;
+      --muted: #92928e;
+      --accent: #b7b49a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont,
+        "Helvetica Neue", Arial, sans-serif;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .hidden { display: none !important; }
+    .login {
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .brand {
+      font-size: 29px;
+      font-weight: 600;
+      letter-spacing: 7px;
+      margin-bottom: 14px;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 3px;
+      margin-bottom: 48px;
+    }
+    .field {
+      width: 100%;
+      background: #171717;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      padding: 17px;
+      color: white;
+      outline: none;
+      margin-bottom: 14px;
+    }
+    .field:focus { border-color: var(--accent); }
+    .primary {
+      width: 100%;
+      background: var(--accent);
+      border: 0;
+      padding: 17px;
+      color: #111;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    .error {
+      color: #e2a3a3;
+      font-size: 13px;
+      margin-top: 16px;
+      min-height: 20px;
+    }
+    .shell {
+      max-width: 1240px;
+      margin: auto;
+      padding: 28px 20px 70px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid var(--line);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: 4px;
+    }
+    header p {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 2px;
+    }
+    .outline {
+      background: transparent;
+      border: 1px solid #555;
+      color: white;
+      padding: 11px 16px;
+    }
+    .heading {
+      margin: 35px 0 22px;
+      font-size: 19px;
+      font-weight: 500;
+      letter-spacing: 2px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      padding: 22px;
+    }
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 13px;
+    }
+    .stat strong {
+      font-size: 30px;
+      font-weight: 400;
+    }
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      margin: 26px 0 18px;
+    }
+    .toolbar input {
+      flex: 1;
+      min-width: 0;
+      margin: 0;
+    }
+    .toolbar button { min-width: 92px; }
+    .notice {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 12px 0;
+      min-height: 20px;
+    }
+    .orders {
+      display: grid;
+      gap: 14px;
+    }
+    .order {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 22px;
+    }
+    .order-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 17px;
+    }
+    .order-number {
+      font-size: 14px;
+      overflow-wrap: anywhere;
+      letter-spacing: 1px;
+    }
+    .date {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+    .price {
+      color: var(--accent);
+      white-space: nowrap;
+      font-size: 17px;
+    }
+    .details {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 17px;
+      margin: 20px 0;
+    }
+    .detail-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+    .detail-value {
+      font-size: 14px;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+    .order-bottom {
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .status-select {
+      background: #1c1c1c;
+      border: 1px solid #555;
+      color: white;
+      padding: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+    .save {
+      background: var(--accent);
+      border: 0;
+      padding: 13px 22px;
+      color: #111;
+      font-weight: 700;
+    }
+    .save:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+    .empty {
+      text-align: center;
+      padding: 50px 15px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+    footer {
+      text-align: center;
+      color: #777;
+      font-size: 11px;
+      letter-spacing: 2px;
+      padding-top: 45px;
+    }
+    @media (max-width: 650px) {
+      .stats { grid-template-columns: repeat(2,1fr); }
+      .stat { padding: 17px; }
+      .stat strong { font-size: 26px; }
+      .brand { font-size: 25px; letter-spacing: 5px; }
+      .details { gap: 15px; }
+      .order { padding: 17px; }
+      .order-bottom { flex-wrap: wrap; }
+      .status-select { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <section id="loginPage" class="login">
+    <div class="login-card">
+      <div class="brand">AUVRYNQ</div>
+      <div class="subtitle">PRIVATE MANAGEMENT SYSTEM</div>
+
+      <form id="loginForm">
+        <input
+          id="password"
+          class="field"
+          type="password"
+          placeholder="ADMIN PASSWORD / 管理員密碼"
+          autocomplete="off"
+          required
+        >
+        <button class="primary" type="submit">
+          ENTER DASHBOARD
+        </button>
+      </form>
+
+      <div id="loginError" class="error"></div>
+      <p style="color:#666;font-size:11px;margin-top:35px">
+        AUTHORIZED ACCESS ONLY
+      </p>
+    </div>
+  </section>
+
+  <main id="dashboard" class="shell hidden">
+    <header>
+      <div>
+        <h1>AUVRYNQ</h1>
+        <p>ORDER MANAGEMENT / 訂單管理</p>
+      </div>
+      <button id="logoutBtn" class="outline">登出</button>
+    </header>
+
+    <h2 class="heading">OVERVIEW / 訂單概況</h2>
+
+    <section class="stats">
+      <div class="stat">
+        <span>全部訂單</span>
+        <strong id="totalCount">0</strong>
+      </div>
+      <div class="stat">
+        <span>待處理</span>
+        <strong id="pendingCount">0</strong>
+      </div>
+      <div class="stat">
+        <span>已確認</span>
+        <strong id="confirmedCount">0</strong>
+      </div>
+      <div class="stat">
+        <span>已出貨</span>
+        <strong id="shippedCount">0</strong>
+      </div>
+    </section>
+
+    <h2 class="heading">ORDERS / 訂單列表</h2>
+
+    <div class="toolbar">
+      <input
+        id="searchInput"
+        class="field"
+        type="search"
+        placeholder="搜尋訂單、姓名、電話、商品"
+      >
+      <button id="refreshBtn" class="outline">重新整理</button>
+    </div>
+
+    <div id="notice" class="notice"></div>
+    <section id="orderList" class="orders"></section>
+
+    <footer>AUVRYNQ © 2026 · PRIVATE SYSTEM</footer>
+  </main>
+
+  <script>
+    "use strict";
+
+    const API =
+      "https://auvrynq-line-notify.pp0906865901.workers.dev";
+
+    const STATUSES = {
+      pending: "待處理",
+      confirmed: "已確認",
+      shipped: "已出貨",
+      completed: "已完成",
+      cancelled: "已取消"
+    };
+
+    let adminPassword = "";
+    let orders = [];
+
+    const $ = id => document.getElementById(id);
+
+    function showLogin(message = "") {
+      adminPassword = "";
+      orders = [];
+      $("password").value = "";
+      $("loginError").textContent = message;
+      $("dashboard").classList.add("hidden");
+      $("loginPage").classList.remove("hidden");
+      $("orderList").replaceChildren();
+    }
+
+    function showDashboard() {
+      $("loginPage").classList.add("hidden");
+      $("dashboard").classList.remove("hidden");
+    }
+
+    function setNotice(message) {
+      $("notice").textContent = message;
+    }
+
+    async function apiRequest(path, options = {}) {
+      const headers = {
+        "Authorization": "Bearer " + adminPassword,
+        ...(options.body
+          ? { "Content-Type": "application/json" }
+          : {})
+      };
+
+      let response;
+
+      try {
+        response = await fetch(API + path, {
+          ...options,
+          headers,
+          cache: "no-store"
+        });
+      } catch {
+        throw new Error("網路連線失敗，請稍後重試");
+      }
+
+      if (response.status === 401) {
+        throw new Error("管理員密碼錯誤或驗證失敗");
+      }
+
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok || !data || !data.success) {
+        throw new Error(
+          data?.error || "伺服器發生錯誤"
+        );
+      }
+
+      return data;
+    }
+
+    async function loadOrders() {
+      setNotice("正在讀取訂單...");
+
+      const data = await apiRequest("/admin/orders");
+      orders = Array.isArray(data.orders) ? data.orders : [];
+
+      renderStats();
+      renderOrders();
+      setNotice("訂單已更新，顯示最新 " + orders.length + " 筆");
+    }
+
+    function renderStats() {
+      $("totalCount").textContent = orders.length;
+      $("pendingCount").textContent =
+        orders.filter(o => o.status === "pending").length;
+      $("confirmedCount").textContent =
+        orders.filter(o => o.status === "confirmed").length;
+      $("shippedCount").textContent =
+        orders.filter(o => o.status === "shipped").length;
+    }
+
+    function addText(parent, className, value) {
+      const el = document.createElement("div");
+      el.className = className;
+      el.textContent = value == null ? "" : String(value);
+      parent.appendChild(el);
+      return el;
+    }
+
+    function addDetail(container, label, value) {
+      const item = document.createElement("div");
+      addText(item, "detail-label", label);
+      addText(item, "detail-value", value || "未提供");
+      container.appendChild(item);
+    }
+
+    function renderOrders() {
+      const keyword = $("searchInput").value
+        .trim()
+        .toLowerCase();
+
+      const filtered = orders.filter(order => {
+        const text = [
+          order.order_number,
+          order.customer_name,
+          order.phone,
+          order.email,
+          order.product,
+          order.address
+        ].join(" ").toLowerCase();
+
+        return text.includes(keyword);
+      });
+
+      const list = $("orderList");
+      list.replaceChildren();
+
+      if (!filtered.length) {
+        addText(
+          list,
+          "empty",
+          keyword ? "找不到符合的訂單" : "目前沒有訂單"
+        );
+        return;
+      }
+
+      for (const order of filtered) {
+        const card = document.createElement("article");
+        card.className = "order";
+
+        const top = document.createElement("div");
+        top.className = "order-top";
+
+        const heading = document.createElement("div");
+        addText(
+          heading,
+          "order-number",
+          order.order_number
+        );
+        addText(
+          heading,
+          "date",
+          order.created_at || ""
+        );
+        top.appendChild(heading);
+
+        addText(
+          top,
+          "price",
+          "NT$ " + Number(order.total || 0).toLocaleString("zh-TW")
+        );
+        card.appendChild(top);
+
+        const details = document.createElement("div");
+        details.className = "details";
+
+        addDetail(details, "客戶姓名", order.customer_name);
+        addDetail(details, "聯絡電話", order.phone);
+        addDetail(details, "電子郵件", order.email);
+        addDetail(details, "配送方式", order.shipping);
+        addDetail(details, "商品資訊", order.product);
+        addDetail(details, "配送地址", order.address);
+
+        card.appendChild(details);
+
+        const bottom = document.createElement("div");
+        bottom.className = "order-bottom";
+
+        const select = document.createElement("select");
+        select.className = "status-select";
+
+        for (const [value, label] of Object.entries(STATUSES)) {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = label;
+          select.appendChild(option);
+        }
+
+        select.value = order.status || "pending";
+        bottom.appendChild(select);
+
+        const save = document.createElement("button");
+        save.className = "save";
+        save.textContent = "儲存狀態";
+
+        save.addEventListener("click", async () => {
+          const newStatus = select.value;
+
+          if (newStatus === order.status) {
+            setNotice("這筆訂單的狀態沒有變更");
+            return;
+          }
+
+          save.disabled = true;
+          save.textContent = "儲存中...";
+
+          try {
+            await apiRequest(
+              "/admin/orders/" + encodeURIComponent(order.id) + "/status",
+              {
+                method: "PATCH",
+                body: JSON.stringify({ status: newStatus })
+              }
+            );
+
+            order.status = newStatus;
+            renderStats();
+            setNotice(
+              "訂單 " + order.order_number + " 已更新為：" +
+              STATUSES[newStatus]
+            );
+            save.textContent = "已儲存";
+          } catch (error) {
+            setNotice("更新失敗：" + error.message);
+            select.value = order.status;
+            save.textContent = "儲存狀態";
+          } finally {
+            save.disabled = false;
+          }
+        });
+
+        bottom.appendChild(save);
+        card.appendChild(bottom);
+        list.appendChild(card);
+      }
+    }
+
+    $("loginForm").addEventListener("submit", async event => {
+      event.preventDefault();
+
+      const password = $("password").value;
+
+      if (!password) return;
+
+      adminPassword = password;
+      $("loginError").textContent = "正在驗證...";
+
+      try {
+        const data = await apiRequest("/admin/orders");
+        orders = Array.isArray(data.orders) ? data.orders : [];
+
+        $("password").value = "";
+        showDashboard();
+        renderStats();
+        renderOrders();
+        setNotice("登入成功，已載入訂單");
+      } catch (error) {
+        showLogin(error.message);
+      }
+    });
+
+    $("logoutBtn").addEventListener("click", () => {
+      showLogin();
+    });
+
+    $("refreshBtn").addEventListener("click", async () => {
+      try {
+        await loadOrders();
+      } catch (error) {
+        if (error.message.includes("驗證失敗")) {
+          showLogin(error.message);
+        } else {
+          setNotice(error.message);
+        }
+      }
+    });
+
+    $("searchInput").addEventListener("input", renderOrders);
+
+    window.addEventListener("pagehide", () => {
+      adminPassword = "";
+      orders = [];
+    });
+  </script>
+</body>
+</html>
