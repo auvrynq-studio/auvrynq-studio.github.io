@@ -537,7 +537,17 @@ try {
     throw new Error("LINE 通知失敗");
   }
 
-  alert("訂單通知已送出，請等待店家確認");
+  
+const result = await response.json();
+
+if (!result.success || !result.orderNumber) {
+  throw new Error("訂單回應缺少編號");
+}
+
+window.location.href =
+  "order-success.html?orderNumber=" +
+  encodeURIComponent(result.orderNumber);
+
 } catch (error) {
   alert("訂單送出失敗，請稍後再試");
 }
