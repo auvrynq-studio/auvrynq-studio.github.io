@@ -503,10 +503,21 @@ async function placeOrder() {
     `${item.id} / SIZE ${item.size} / QTY ${item.quantity}`
   ).join(", "),
   total: cart.reduce((sum, item) =>
-    sum + Number(item.price) * Number(item.quantity), 0
-  ),
-  shipping: document.getElementById("shipping").value,
-  address: document.getElementById("address")?.value || ""
+  sum + Number(item.price) * Number(item.quantity),
+  0
+),
+shipping: ({
+  home: "宅配到府",
+  "7-11": "7-ELEVEN 超商取貨",
+  family: "全家便利商店取貨"
+})[document.getElementById("shipping").value]
+  || document.getElementById("shipping").value,
+
+address: [
+  document.getElementById("county")?.value,
+  document.getElementById("district")?.value,
+  document.getElementById("address")?.value
+].filter(Boolean).join("")
 };
 
 try {
