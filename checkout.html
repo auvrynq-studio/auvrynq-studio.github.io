@@ -478,23 +478,27 @@ function loadOrder() {
   document.getElementById("subtotal").textContent =
     "NT$" + total.toLocaleString("en-US");
 }
-
+let isSubmittingOrder = false;
 async function placeOrder() {
+  if (isSubmittingOrder) return;
+  isSubmittingOrder = true;
   const name = document.getElementById("customer").value.trim();
   const phone = document.getElementById("phone").value.trim();
   const email = document.getElementById("email").value.trim();
 
   if (!name || !phone || !email) {
-    alert("請填寫收件人姓名、電話及電子郵件");
-    return;
-  }
+  isSubmittingOrder = false;
+  alert("請填寫收件人姓名、電話及電子郵件");
+  return;
+}
 
   const cart = JSON.parse(localStorage.getItem("auvrynq_cart") || "[]");
 
   if (!cart.length) {
-    alert("購物車是空的，請先選購商品");
-    return;
-  }
+  isSubmittingOrder = false;
+  alert("購物車是空的，請先選購商品");
+  return;
+}
 
  const order = {
   name,
@@ -550,6 +554,8 @@ window.location.href =
 
 } catch (error) {
   alert("訂單送出失敗，請稍後再試");
+} finally {
+  isSubmittingOrder = false;
 }
 
 }
