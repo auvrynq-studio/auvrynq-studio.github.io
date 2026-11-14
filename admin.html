@@ -479,7 +479,13 @@
         addText(
           heading,
           "date",
-          order.created_at || ""
+          order.created_at
+  ? new Date(order.created_at.replace(" ", "T") + "Z")
+      .toLocaleString("zh-TW", {
+        timeZone: "Asia/Taipei",
+        hour12: false
+      })
+  : ""
         );
         top.appendChild(heading);
 
