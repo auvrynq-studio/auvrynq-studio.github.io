@@ -523,7 +523,24 @@
 
         select.value = order.status || "pending";
         bottom.appendChild(select);
+const paymentSelect = document.createElement("select");
+paymentSelect.className = "status-select";
 
+const paymentOptions = {
+  unpaid: "待付款",
+  paid: "已確認入帳",
+  refunded: "已退款"
+};
+
+for (const [value, label] of Object.entries(paymentOptions)) {
+  const option = document.createElement("option");
+  option.value = value;
+  option.textContent = label;
+  paymentSelect.appendChild(option);
+}
+
+paymentSelect.value = order.payment_status || "unpaid";
+bottom.appendChild(paymentSelect);
         const save = document.createElement("button");
         save.className = "save";
         save.textContent = "儲存狀態";
@@ -565,6 +582,52 @@
         });
 
         bottom.appendChild(save);
+        const paymentSave = document.createElement("button");
+paymentSave.className = "save";
+paymentSave.textContent = "儲存付款狀態";
+
+paymentSave.addEventListener("click", async () => {
+  const newPaymentStatus = paymentSelect.value;
+
+  if (newPaymentStatus === order.payment_status) {
+    setNotice("這筆訂單的付款狀態沒有變更");
+    return;
+  }
+
+  if (newPaymentStatus === "paid" &&
+      !confirm("請確認銀行款項已實際入帳，是否標記為已付款？")) {
+    return;
+  }
+
+  paymentSave.disabled = true;
+  paymentSave.textContent = "儲存中...";
+
+  try {
+    await apiRequest(
+      "/admin/orders/" +
+        encodeURIComponent(order.id) +
+        "/payment-status",
+      {
+        method: "PATCH",
+        body: JSON.stringify({
+          payment_status: newPaymentStatus
+        })
+      }
+    );
+
+    order.payment_status = newPaymentStatus;
+    paymentSave.textContent = "已儲存";
+    setNotice("付款狀態已更新：" + paymentOptions[newPaymentStatus]);
+  } catch (error) {
+    paymentSelect.value = order.payment_status || "unpaid";
+    paymentSave.textContent = "儲存付款狀態";
+    setNotice("付款狀態更新失敗：" + error.message);
+  } finally {
+    paymentSave.disabled = false;
+  }
+});
+
+bottom.appendChild(paymentSave);
         card.appendChild(bottom);
         list.appendChild(card);
       }
