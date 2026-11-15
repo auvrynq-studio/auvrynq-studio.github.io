@@ -507,9 +507,9 @@ async function placeOrder() {
   product: cart.map(item =>
     `${item.id} / SIZE ${item.size} / QTY ${item.quantity}`
   ).join(", "),
-  total: cart.reduce((sum, item) =>
-  sum + Number(item.price) * Number(item.quantity),
-  0
+  total: Number(
+  document.getElementById("grand-total")
+    .textContent.replace(/[^0-9]/g, "")
 ),
 shipping: ({
   home: "宅配到府",
