@@ -628,6 +628,108 @@ paymentSave.addEventListener("click", async () => {
 });
 
 bottom.appendChild(paymentSave);
+const fulfillmentBox = document.createElement("div");
+fulfillmentBox.style.cssText =
+  "width:100%;display:grid;gap:10px;margin-top:16px;";
+
+const fulfillmentFields = [
+  {
+    key: "fulfillment_mode",
+    label: "出貨方式",
+    options: {
+      undecided: "尚未決定",
+      supplier_direct: "批發商直寄顧客",
+      self_ship: "自行轉寄顧客"
+    }
+  },
+  {
+    key: "procurement_status",
+    label: "採購進度",
+    options: {
+      not_ordered: "尚未向批發商訂貨",
+      ordered: "已向批發商訂貨",
+      supplier_shipped: "批發商已寄出",
+      received: "已收到商品",
+      completed: "採購完成"
+    }
+  }
+];
+
+const fulfillmentInputs = {};
+
+for (const field of fulfillmentFields) {
+  const label = document.createElement("label");
+  label.textContent = field.label;
+
+  const select = document.createElement("select");
+  select.className = "status-select";
+
+  for (const [value, text] of Object.entries(field.options)) {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = text;
+    select.appendChild(option);
+  }
+
+  select.value = order[field.key] || Object.keys(field.options)[0];
+  fulfillmentInputs[field.key] = select;
+
+  fulfillmentBox.appendChild(label);
+  fulfillmentBox.appendChild(select);
+}
+
+const trackingLabel = document.createElement("label");
+trackingLabel.textContent = "物流單號";
+
+const trackingInput = document.createElement("input");
+trackingInput.type = "text";
+trackingInput.placeholder = "輸入顧客包裹物流單號";
+trackingInput.maxLength = 100;
+trackingInput.value = order.tracking_number || "";
+trackingInput.style.cssText =
+  "width:100%;box-sizing:border-box;padding:12px;";
+
+fulfillmentBox.appendChild(trackingLabel);
+fulfillmentBox.appendChild(trackingInput);
+
+const fulfillmentSave = document.createElement("button");
+fulfillmentSave.className = "save";
+fulfillmentSave.textContent = "儲存出貨資料";
+
+fulfillmentSave.addEventListener("click", async () => {
+  fulfillmentSave.disabled = true;
+  fulfillmentSave.textContent = "儲存中...";
+
+  const data = {
+    fulfillment_mode: fulfillmentInputs.fulfillment_mode.value,
+    procurement_status: fulfillmentInputs.procurement_status.value,
+    tracking_number: trackingInput.value.trim()
+  };
+
+  try {
+    await apiRequest(
+      "/admin/orders/" +
+        encodeURIComponent(order.id) +
+        "/fulfillment",
+      {
+        method: "PATCH",
+        body: JSON.stringify(data)
+      }
+    );
+
+    Object.assign(order, data);
+    fulfillmentSave.textContent = "已儲存";
+    setNotice("出貨資料已更新");
+  } catch (error) {
+    fulfillmentSave.textContent = "儲存出貨資料";
+    setNotice("出貨資料更新失敗：" + error.message);
+  } finally {
+    fulfillmentSave.disabled = false;
+  }
+});
+
+fulfillmentBox.appendChild(fulfillmentSave);
+bottom.appendChild(fulfillmentBox);
         card.appendChild(bottom);
         list.appendChild(card);
       }
