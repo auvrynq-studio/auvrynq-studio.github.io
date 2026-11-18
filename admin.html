@@ -320,7 +320,51 @@
 
     <div id="notice" class="notice"></div>
     <section id="orderList" class="orders"></section>
+<!-- AUVRYNQ 商品管理區域 -->
+<section id="productManagement" class="orders">
+  <h2>商品管理 PRODUCT MANAGEMENT</h2>
+  <p>新增、編輯及管理 AUVRYNQ 商品</p>
+  <form id="productForm" class="login-card" style="margin:24px 0;max-width:600px;">
+  <h3>新增商品 ADD PRODUCT</h3>
 
+  <label>商品編號 SKU</label>
+  <input id="productSku" type="text" maxlength="100" required placeholder="例如 AV002">
+
+  <label>商品名稱</label>
+  <input id="productName" type="text" maxlength="200" required placeholder="例如 AUVRYNQ ESSENTIAL TEE">
+
+  <label>商品價格 NT$</label>
+  <input id="productPrice" type="number" min="0" step="1" required placeholder="例如 1280">
+
+  <label>商品分類</label>
+  <select id="productCategory">
+    <option value="tops">上衣 TOPS</option>
+    <option value="bottoms">褲裝 BOTTOMS</option>
+    <option value="outerwear">外套 OUTERWEAR</option>
+    <option value="accessories">配件 ACCESSORIES</option>
+  </select>
+
+  <label>商品尺寸（使用逗號分隔）</label>
+  <input id="productSizes" type="text" placeholder="S,M,L,XL">
+
+  <label>商品圖片網址</label>
+  <input id="productImage" type="url" placeholder="https://...">
+
+  <label>商品描述</label>
+  <textarea id="productDescription" rows="4" maxlength="5000"></textarea>
+
+  <label>上架狀態</label>
+  <select id="productStatus">
+    <option value="draft">草稿</option>
+    <option value="active">正式上架</option>
+    <option value="inactive">下架</option>
+  </select>
+
+  <button type="submit" class="save">儲存商品</button>
+  <p id="productMessage" role="status"></p>
+</form>
+  <div id="productList"></div>
+</section>
     <footer>AUVRYNQ © 2026 · PRIVATE SYSTEM</footer>
   </main>
 
@@ -781,6 +825,49 @@ bottom.appendChild(fulfillmentBox);
       adminPassword = "";
       orders = [];
     });
+  // AUVRYNQ 商品管理：新增商品表單
+$("productForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const message = $("productMessage");
+  const button = $("productForm").querySelector('button[type="submit"]');
+
+  const sizes = $("productSizes").value
+    .split(",")
+    .map(size => size.trim())
+    .filter(Boolean);
+
+  const product = {
+    sku: $("productSku").value.trim(),
+    name: $("productName").value.trim(),
+    price: Number($("productPrice").value),
+    category: $("productCategory").value,
+    sizes,
+    image_url: $("productImage").value.trim(),
+    description: $("productDescription").value.trim(),
+    status: $("productStatus").value
+  };
+
+  button.disabled = true;
+  button.textContent = "儲存中...";
+  message.textContent = "";
+
+  try {
+    const result = await apiRequest("/admin/products", {
+      method: "POST",
+      body: JSON.stringify(product)
+    });
+
+    message.textContent = "商品新增成功！編號：" + result.id;
+
+    $("productForm").reset();
+  } catch (error) {
+    message.textContent = "商品新增失敗：" + error.message;
+  } finally {
+    button.disabled = false;
+    button.textContent = "儲存商品";
+  }
+});
   </script>
 </body>
 </html>
