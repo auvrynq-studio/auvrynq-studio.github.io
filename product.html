@@ -375,12 +375,13 @@ addToCartButton.addEventListener("click", () => {
       (Number(existingItem.quantity) || 0) + 1;
   } else {
     cart.push({
-      id: product.sku,
-      name: product.name,
-      price: Number(product.price),
-      size: selectedSize,
-      quantity: 1
-    });
+  id: product.sku,
+  name: product.name,
+  price: Number(product.price),
+  size: selectedSize,
+  quantity: 1,
+  image_url: product.image_url || ""
+});
   }
 
   localStorage.setItem(
