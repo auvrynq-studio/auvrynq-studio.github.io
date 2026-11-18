@@ -190,6 +190,13 @@ async function loadStoreProducts() {
     for (const product of products) {
       const card = document.createElement("div");
       card.className = "product-card";
+      // AUVRYNQ 商品點擊功能
+card.style.cursor = "pointer";
+
+card.addEventListener("click", () => {
+  window.location.href =
+    "product.html?sku=" + encodeURIComponent(product.sku);
+});
 
       const imageBox = document.createElement("div");
       imageBox.className = "product-image";
