@@ -125,8 +125,16 @@ function renderCart() {
     row.className = "item";
 
     const img = document.createElement("img");
-    img.src = "images/IMG_1915.webp";
-    img.alt = "AV-001";
+
+img.src = item.image_url || "data:image/svg+xml," +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="110" height="140">' +
+    '<rect width="110" height="140" fill="#222"/>' +
+    '<text x="55" y="70" text-anchor="middle" fill="#888" font-size="10">AUVRYNQ</text>' +
+    '</svg>'
+  );
+
+img.alt = item.name || "AUVRYNQ";
 
     const details = document.createElement("div");
     details.className = "details";
