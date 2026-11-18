@@ -797,6 +797,7 @@ bottom.appendChild(fulfillmentBox);
         showDashboard();
         renderStats();
         renderOrders();
+        await loadProducts();
         setNotice("登入成功，已載入訂單");
       } catch (error) {
         showLogin(error.message);
@@ -861,6 +862,7 @@ $("productForm").addEventListener("submit", async (event) => {
     message.textContent = "商品新增成功！編號：" + result.id;
 
     $("productForm").reset();
+    await loadProducts();
   } catch (error) {
     message.textContent = "商品新增失敗：" + error.message;
   } finally {
@@ -868,6 +870,54 @@ $("productForm").addEventListener("submit", async (event) => {
     button.textContent = "儲存商品";
   }
 });
+    // AUVRYNQ 商品管理：讀取商品列表
+async function loadProducts() {
+  const container = $("productList");
+
+  container.replaceChildren();
+  container.textContent = "商品資料載入中...";
+
+  try {
+    const result = await apiRequest("/admin/products");
+
+    const products = result.products || [];
+
+    container.replaceChildren();
+
+    if (products.length === 0) {
+      container.textContent = "目前尚無商品";
+      return;
+    }
+
+    const heading = document.createElement("h3");
+    heading.textContent = "商品列表 PRODUCT LIST";
+    container.appendChild(heading);
+
+    for (const product of products) {
+      const card = document.createElement("div");
+
+      card.style.cssText =
+        "border:1px solid #333;padding:18px;margin:12px 0;";
+
+      const title = document.createElement("h4");
+      title.textContent = product.name;
+
+      const details = document.createElement("p");
+      details.textContent =
+        "SKU：" + product.sku +
+        "｜NT$ " + product.price +
+        "｜狀態：" + product.status;
+
+      card.appendChild(title);
+      card.appendChild(details);
+      container.appendChild(card);
+    }
+
+  } catch (error) {
+    container.textContent =
+      "商品讀取失敗：" + error.message;
+  }
+}
   </script>
 </body>
 </html>
