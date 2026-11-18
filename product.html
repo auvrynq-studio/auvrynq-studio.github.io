@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PRODUCT | AUVRYNQ</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #0b0b0b;
+  color: #f5f5f5;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 30px;
+  text-align: center;
+  border-bottom: 1px solid #333;
+}
+
+header a {
+  color: white;
+  text-decoration: none;
+  font-size: 24px;
+  letter-spacing: 7px;
+}
+
+main {
+  max-width: 1150px;
+  margin: 70px auto;
+  padding: 20px;
+}
+
+.product-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+}
+
+.product-image {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: #1b1b1b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+  letter-spacing: 3px;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-info {
+  padding-top: 30px;
+}
+
+.sku {
+  color: #888;
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+h1 {
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  line-height: 1.5;
+}
+
+.price {
+  font-size: 22px;
+  margin: 30px 0;
+}
+
+.description {
+  color: #aaa;
+  font-size: 14px;
+  line-height: 2;
+  white-space: pre-line;
+  margin-bottom: 40px;
+}
+
+label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+select {
+  width: 100%;
+  padding: 15px;
+  background: #171717;
+  color: white;
+  border: 1px solid #555;
+  font-size: 14px;
+}
+
+.notice {
+  margin-top: 30px;
+  color: #888;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.back {
+  display: inline-block;
+  margin-top: 40px;
+  padding: 14px 24px;
+  border: 1px solid #555;
+  color: white;
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+footer {
+  text-align: center;
+  padding: 60px 20px;
+  color: #777;
+  font-size: 11px;
+}
+
+@media (max-width: 768px) {
+  main {
+    margin: 25px auto;
+  }
+
+  .product-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .product-info {
+    padding-top: 10px;
+  }
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+  <a href="index.html">AUVRYNQ</a>
+</header>
+
+<main>
+
+  <div id="productContainer">
+    商品資料載入中...
+  </div>
+
+  <a class="back" href="tops.html">
+    BACK TO COLLECTION
+  </a>
+
+</main>
+
+<footer>
+  AUVRYNQ © 2026
+</footer>
+
+<script>
+
+const API_URL =
+  "https://auvrynq-line-notify.pp0906865901.workers.dev";
+
+async function loadProduct() {
+
+  const container =
+    document.getElementById("productContainer");
+
+  const params =
+    new URLSearchParams(window.location.search);
+
+  const sku = params.get("sku");
+
+  if (!sku) {
+    container.textContent = "找不到商品編號";
+    return;
+  }
+
+  try {
+
+    const response = await fetch(
+      API_URL + "/products"
+    );
+
+    if (!response.ok) {
+      throw new Error("商品資料讀取失敗");
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error("商品資料讀取失敗");
+    }
+
+    const product = (data.products || []).find(
+      item => item.sku === sku
+    );
+
+    if (!product) {
+      container.textContent =
+        "商品不存在或目前未上架";
+      return;
+    }
+
+    document.title =
+      product.name + " | AUVRYNQ";
+
+    container.replaceChildren();
+
+    const layout = document.createElement("div");
+    layout.className = "product-layout";
+
+    const imageBox = document.createElement("div");
+    imageBox.className = "product-image";
+
+    if (
+      product.image_url &&
+      /^https:\/\//i.test(product.image_url)
+    ) {
+
+      const image = document.createElement("img");
+      image.src = product.image_url;
+      image.alt = product.name;
+
+      imageBox.appendChild(image);
+
+    } else {
+
+      imageBox.textContent = "AUVRYNQ";
+
+    }
+
+    const info = document.createElement("div");
+    info.className = "product-info";
+
+    const skuText = document.createElement("p");
+    skuText.className = "sku";
+    skuText.textContent = "SKU / " + product.sku;
+
+    const name = document.createElement("h1");
+    name.textContent = product.name;
+
+    const price = document.createElement("p");
+    price.className = "price";
+    price.textContent =
+      "NT$ " +
+      Number(product.price).toLocaleString("zh-TW");
+
+    const description = document.createElement("p");
+    description.className = "description";
+    description.textContent =
+      product.description || "AUVRYNQ COLLECTION";
+
+    const sizeLabel = document.createElement("label");
+    sizeLabel.textContent = "SELECT SIZE / 選擇尺寸";
+
+    const sizeSelect = document.createElement("select");
+
+    let sizes = [];
+
+    try {
+      sizes = JSON.parse(product.sizes || "[]");
+    } catch {
+      sizes = [];
+    }
+
+    if (!Array.isArray(sizes)) {
+      sizes = [];
+    }
+
+    if (sizes.length === 0) {
+
+      const option = document.createElement("option");
+      option.textContent = "尚未提供尺寸";
+      option.value = "";
+      sizeSelect.appendChild(option);
+      sizeSelect.disabled = true;
+
+    } else {
+
+      const placeholder = document.createElement("option");
+      placeholder.textContent = "請選擇尺寸";
+      placeholder.value = "";
+      sizeSelect.appendChild(placeholder);
+
+      sizes.forEach(size => {
+
+        const option = document.createElement("option");
+        option.value = size;
+        option.textContent = size;
+
+        sizeSelect.appendChild(option);
+
+      });
+
+    }
+
+    const notice = document.createElement("p");
+    notice.className = "notice";
+    notice.textContent =
+      "商品詳細資訊已載入。購物車連接功能將於下一階段完成。";
+
+    info.appendChild(skuText);
+    info.appendChild(name);
+    info.appendChild(price);
+    info.appendChild(description);
+    info.appendChild(sizeLabel);
+    info.appendChild(sizeSelect);
+    info.appendChild(notice);
+
+    layout.appendChild(imageBox);
+    layout.appendChild(info);
+
+    container.appendChild(layout);
+
+  } catch (error) {
+
+    console.error("AUVRYNQ PRODUCT ERROR:", error);
+
+    container.textContent =
+      "商品資料暫時無法載入，請稍後再試。";
+
+  }
+
+}
+
+loadProduct();
+
+</script>
+
+</body>
+</html>
