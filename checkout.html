@@ -491,7 +491,15 @@ async function placeOrder() {
   alert("請填寫收件人姓名、電話及電子郵件");
   return;
 }
+const county = document.getElementById("county").value;
+const district = document.getElementById("district").value;
+const address = document.getElementById("address").value.trim();
 
+if (!county || !district || !address) {
+  isSubmittingOrder = false;
+  alert("請完整填寫收件縣市、鄉鎮市區及取貨門市或配送地址");
+  return;
+}
   const cart = JSON.parse(localStorage.getItem("auvrynq_cart") || "[]");
 
   if (!cart.length) {
