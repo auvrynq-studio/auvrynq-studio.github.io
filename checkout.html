@@ -512,6 +512,11 @@ if (!county || !district || !address) {
   name,
   phone,
   email,
+   items: cart.map(item => ({
+  sku: item.id,
+  size: item.size,
+  quantity: Number(item.quantity)
+})),
   product: cart.map(item =>
     `${item.id} / SIZE ${item.size} / QTY ${item.quantity}`
   ).join(", "),
