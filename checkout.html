@@ -495,9 +495,16 @@ const county = document.getElementById("county").value;
 const district = document.getElementById("district").value;
 const address = document.getElementById("address").value.trim();
 
-if (!county || !district || !address) {
+if (
+  !county ||
+  !address ||
+  (
+    document.getElementById("shipping").value === "home" &&
+    !district
+  )
+) {
   isSubmittingOrder = false;
-  alert("請完整填寫收件縣市、鄉鎮市區及取貨門市或配送地址");
+  alert("請完整填寫配送資料；宅配需另外選擇鄉鎮市區");
   return;
 }
   const cart = JSON.parse(localStorage.getItem("auvrynq_cart") || "[]");
