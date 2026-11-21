@@ -95,6 +95,109 @@ ACCESSORIES
 </div>
 
 </section>
+<!-- AUVRYNQ NEW ARRIVALS -->
+<section id="new-arrivals" style="padding:60px 20px;">
+
+  <h2>NEW ARRIVALS</h2>
+  <p>最新上架商品</p>
+
+  <div id="product-grid" style="
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    max-width:1000px;
+    margin:30px auto;
+  "></div>
+
+  <p id="product-message">商品載入中...</p>
+
+</section>
+
+<script>
+(async function () {
+
+  const grid = document.getElementById("product-grid");
+  const message = document.getElementById("product-message");
+
+  try {
+
+    const response = await fetch(
+      "https://auvrynq-line-notify.pp0906865901.workers.dev/products"
+    );
+
+    if (!response.ok) {
+      throw new Error("Product API error");
+    }
+
+    const data = await response.json();
+
+    if (!data.success || !Array.isArray(data.products)) {
+      throw new Error("Invalid product data");
+    }
+
+    if (data.products.length === 0) {
+      message.textContent = "目前尚無上架商品";
+      return;
+    }
+
+    message.textContent = "";
+
+    data.products.forEach(product => {
+
+      const card = document.createElement("article");
+
+      card.style.cssText = `
+        border:1px solid #333;
+        padding:20px;
+        background:#151515;
+        text-align:left;
+      `;
+
+      if (
+        product.image_url &&
+        /^https:\/\//i.test(product.image_url)
+      ) {
+
+        const img = document.createElement("img");
+
+        img.src = product.image_url;
+        img.alt = product.name;
+        img.loading = "lazy";
+
+        img.style.cssText = `
+          width:100%;
+          height:260px;
+          object-fit:cover;
+        `;
+
+        card.appendChild(img);
+
+      }
+
+      const name = document.createElement("h3");
+      name.textContent = product.name;
+
+      const price = document.createElement("p");
+      price.textContent =
+        "NT$ " + Number(product.price).toLocaleString("zh-TW");
+
+      card.appendChild(name);
+      card.appendChild(price);
+
+      grid.appendChild(card);
+
+    });
+
+  } catch (error) {
+
+    console.error("AUVRYNQ Product Error:", error);
+
+    message.textContent = "商品暫時無法載入";
+
+  }
+
+})();
+</script>  
 <footer>
   AUVRYNQ © 2026
 </footer>
