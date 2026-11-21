@@ -493,7 +493,12 @@ async function placeOrder() {
 }
 const county = document.getElementById("county").value;
 const district = document.getElementById("district").value;
-const address = document.getElementById("address").value.trim();
+const shippingMethod = document.getElementById("shipping").value;
+const address = (
+  shippingMethod === "home"
+    ? document.getElementById("address").value
+    : document.getElementById("store").value
+).trim();
 
 if (
   !county ||
@@ -539,9 +544,9 @@ shipping: ({
   || document.getElementById("shipping").value,
 
 address: [
-  document.getElementById("county")?.value,
-  document.getElementById("district")?.value,
-  document.getElementById("address")?.value
+  county,
+  shippingMethod === "home" ? district : "",
+  address
 ].filter(Boolean).join("")
 };
 
