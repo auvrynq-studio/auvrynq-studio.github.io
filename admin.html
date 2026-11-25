@@ -606,7 +606,14 @@ bottom.appendChild(paymentSelect);
 
         save.addEventListener("click", async () => {
           const newStatus = select.value;
-
+          if (
+  order.status === "cancelled" &&
+  newStatus !== "cancelled"
+) {
+  alert("此訂單已取消，禁止修改為其他訂單狀態。");
+  select.value = order.status;
+  return;
+}
           if (newStatus === order.status) {
             setNotice("這筆訂單的狀態沒有變更");
             return;
