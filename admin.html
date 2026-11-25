@@ -547,7 +547,21 @@
         addDetail(details, "客戶姓名", order.customer_name);
         addDetail(details, "聯絡電話", order.phone);
         addDetail(details, "電子郵件", order.email);
-        addDetail(details, "配送方式", order.shipping);
+        const shippingNames = {
+  "711": "7-ELEVEN 超商取貨",
+  "7-11": "7-ELEVEN 超商取貨",
+  "7-ELEVEN 超商取貨": "7-ELEVEN 超商取貨",
+  "family": "全家便利商店取貨",
+  "全家便利商店取貨": "全家便利商店取貨",
+  "home": "宅配到府",
+  "宅配到府": "宅配到府"
+};
+
+addDetail(
+  details,
+  "配送方式",
+  shippingNames[order.shipping] || order.shipping || "未提供"
+);
         addDetail(details, "商品資訊", order.product);
         addDetail(details, "配送地址", order.address);
 
