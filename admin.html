@@ -640,6 +640,7 @@ bottom.appendChild(paymentSelect);
             save.textContent = "已儲存";
           } catch (error) {
             setNotice("更新失敗：" + error.message);
+            alert("訂單狀態更新失敗：\n" + error.message);
             select.value = order.status;
             save.textContent = "儲存狀態";
           } finally {
