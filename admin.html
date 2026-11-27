@@ -689,6 +689,7 @@ paymentSave.addEventListener("click", async () => {
     paymentSelect.value = order.payment_status || "unpaid";
     paymentSave.textContent = "儲存付款狀態";
     setNotice("付款狀態更新失敗：" + error.message);
+    alert("付款狀態更新失敗：\n" + error.message);
   } finally {
     paymentSave.disabled = false;
   }
