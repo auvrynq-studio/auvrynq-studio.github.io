@@ -542,11 +542,26 @@ shipping: ({
   home: "home"
 })[shippingMethod] || shippingMethod,
 
-address: [
-  county,
-  shippingMethod === "home" ? district : "",
-  address
-].filter(Boolean).join("")
+address: (() => {
+  const fullAddress = String(address || "").trim();
+  const selectedCounty = String(county || "").trim();
+  const selectedDistrict =
+    shippingMethod === "home"
+      ? String(district || "").trim()
+      : "";
+
+  const prefix = selectedCounty + selectedDistrict;
+
+  if (fullAddress.startsWith(prefix)) {
+    return fullAddress;
+  }
+
+  if (fullAddress.startsWith(selectedCounty)) {
+    return fullAddress;
+  }
+
+  return prefix + fullAddress;
+})()
 };
 
 try {
