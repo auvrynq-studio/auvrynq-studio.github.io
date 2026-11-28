@@ -145,7 +145,11 @@ ACCESSORIES
     data.products.forEach(product => {
 
       const card = document.createElement("article");
+card.style.cursor = "pointer";
 
+card.addEventListener("click", () => {
+  window.location.href = "product.html?sku=" + encodeURIComponent(product.sku);
+});
       card.style.cssText = `
         border:1px solid #333;
         padding:20px;
