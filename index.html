@@ -21,7 +21,28 @@ header {
     font-size: 22px;
     font-weight: 300;
 }
+header {
+  position: relative;
+}
 
+.cart-link {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-top: 0;
+  padding: 8px 12px;
+  border: 1px solid #555;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-decoration: none;
+  color: white;
+}
+
+.cart-link:hover {
+  background: white;
+  color: black;
+}
 
 main {
     padding: 130px 20px 90px;
@@ -59,7 +80,10 @@ footer {
 </style>
 </head>
 <body>
-<header>AUVRYNQ</header>
+<header>
+  <span>AUVRYNQ</span>
+  <a href="cart.html" class="cart-link">CART 🛒</a>
+</header>
 <main>
   <p>INDEPENDENT FASHION LABEL</p>
   <h1>AUVRYNQ</h1>
