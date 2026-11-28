@@ -342,6 +342,8 @@ addToCartButton.style.cssText = `
 `;
 
 addToCartButton.addEventListener("click", () => {
+  if (addToCartButton.disabled) return;
+
   const selectedSize = sizeSelect.value;
 
   if (!selectedSize) {
@@ -365,6 +367,9 @@ addToCartButton.addEventListener("click", () => {
     return;
   }
 
+addToCartButton.disabled = true;
+  addToCartButton.textContent = "ADDING...";
+  
   const existingItem = cart.find(item =>
     item.id === product.sku &&
     item.size === selectedSize
