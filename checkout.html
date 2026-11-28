@@ -537,11 +537,10 @@ if (
     .textContent.replace(/[^0-9]/g, "")
 ),
 shipping: ({
-  home: "宅配到府",
-  "7-11": "7-ELEVEN 超商取貨",
-  family: "全家便利商店取貨"
-})[document.getElementById("shipping").value]
-  || document.getElementById("shipping").value,
+  "7-11": "711",
+  family: "family",
+  home: "home"
+})[shippingMethod] || shippingMethod,
 
 address: [
   county,
